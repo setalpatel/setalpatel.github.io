@@ -9,23 +9,24 @@
   }
 
   function drawCell(tr, val) {
-      var td = $("<td/>");
-      tr.append(td);
-      if (/^http(s):\/\//.test(val)) {
-           var href = $("<a/>");
-           href.attr("href", val);
-           href.append(val);
-           td.append(href);
-      } else {
-           td.append(val);
-      }
-      return td;
-  }
+     var td = $("<td/>");
+     tr.append(td);
+     td.append(val);
+     return td;
+ }
+
   function drawRow(table, rowData) {
       if (rowData == null) return null;
       if (rowData.length == 0) return null;
+
       var tr = $("<tr/>");
       table.append(tr);
+
+      var lastCell = rowData.pop();
+      if (/^http(s):\/\//.test(lastCell)) {
+          tr.attr("data-href", lastCell);
+      }
+
       for(var c=0; c<rowData.length; c++) {
           drawCell(tr, rowData[c]);
       }
@@ -43,7 +44,7 @@
       var table = drawTable(parent);
       var rowData = [];
 
-      for(var r=0; r<data.length; r++) {
+      for(var r=0; r < data.length; r++) {
           var cell = data[r]["gs$cell"];
           var val = cell["$t"];
           if (cell.col == 1) {
@@ -56,6 +57,10 @@
   }
   $(document).ready(function(){
       readData($("#data"));
+
+      $("table").on("click", "tr[data-href]", function () {
+           window.location = $(this).attr("data-href");
+      });
   });
   </script>
 <script src="https://spreadsheets.google.com/feeds/cells/1hBVF5A5lgAjooRPYNGAheG82EbP9WYvdJP_jyR_v_cw/1/public/values?alt=json-in-script&callback=doData"></script>
@@ -142,15 +147,23 @@
                 width: 100%;
                 border-collapse: collapse;
             }
+            table tr:first-child {
+                 font-weight: 600;
+            }
             table td {
                 padding: 20px 15px;
                 padding: 5vw 2vw;
+                text-align: center;
             }
             table td:nth-child(2) {
                 padding-left: 0;
             }
             table tr {
                 background-color: #e0f7fa;
+            }
+            table tr[data-href]:hover td{
+                 cursor: pointer;
+                background-color: #c3e4e8;
             }
             table tr:nth-child(even) {
                 background-color: #b2ebf2;
