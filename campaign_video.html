@@ -1,0 +1,247 @@
+<!doctype html>
+<html>
+<head>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script type="text/javascript">
+  var spData = null;
+  function doData(json) {
+      spData = json.feed.entry;
+  }
+
+  function drawCell(tr, val) {
+     var td = $("<td/>");
+     tr.append(td);
+     td.append(val);
+     return td;
+ }
+
+  function drawRow(table, rowData) {
+      if (rowData == null) return null;
+      if (rowData.length == 0) return null;
+
+      var tr = $("<tr/>");
+      table.append(tr);
+
+      var lastCell = rowData.pop();
+      if (/^http(s):\/\//.test(lastCell)) {
+          tr.attr("data-href", lastCell);
+      }
+
+      for(var c=0; c<rowData.length; c++) {
+          drawCell(tr, rowData[c]);
+      }
+      return tr;
+  }
+
+  function drawTable(parent) {
+      var table = $("<table/>");
+      parent.append(table);
+      return table;
+  }
+
+  function readData(parent) {
+      var data = spData;
+      var table = drawTable(parent);
+      var rowData = [];
+
+      for(var r=0; r < data.length; r++) {
+          var cell = data[r]["gs$cell"];
+          var val = cell["$t"];
+          if (cell.col == 1) {
+              drawRow(table, rowData);
+              rowData = [];
+          }
+          rowData.push(val);
+      }
+      drawRow(table, rowData);
+  }
+  $(document).ready(function(){
+      readData($("#data"));
+
+      $("table").on("click", "tr[data-href]", function () {
+           window.location = $(this).attr("data-href");
+      });
+  });
+  </script>
+<script src="https://spreadsheets.google.com/feeds/cells/1hBVF5A5lgAjooRPYNGAheG82EbP9WYvdJP_jyR_v_cw/2/public/values?alt=json-in-script&callback=doData"></script>
+<style>
+            *,
+            :after,
+            :before {
+                -webkit-box-sizing: border-box;
+                box-sizing: border-box;
+            }
+            body,
+            html {
+                height: 100%;
+                width: 100%;
+            }
+            body {
+                margin: 0;
+                padding: 4px;
+                position: relative;
+                -moz-osx-font-smoothing: grayscale;
+                -webkit-font-smoothing: antialiased;
+                font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+                    Oxygen-Sans, Ubuntu, Cantarell, Helvetica Neue, sans-serif;
+                color: #212121;
+                background-color: #f1f1f1;
+            }
+            h1,
+            h2,
+            h3,
+            h4,
+            b {
+                font-weight: 500;
+                text-align: center;
+            }
+            h1,
+            h2,
+            h3,
+            h4,
+            p {
+                margin: 0;
+            }
+
+            .bg-graphics {
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
+            }
+            .text-center {
+                text-align: center;
+            }
+            .text-ellipsis {
+                max-width: 30vw;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            section {
+                border-radius: 15px 15px 4px 4px;
+                box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.25);
+                overflow: hidden;
+            }
+            header,
+            footer {
+                background-color: #00acc1;
+            }
+            table tr.active {
+                background-color: #0097a7 !important;
+            }
+            header,
+            footer,
+            table tr.active {
+                color: white;
+            }
+            header {
+                padding: 12px 16px;
+                font-size: 1em;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+            footer {
+                height: 36px;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            table tr:first-child {
+                 font-weight: 600;
+            }
+            table td {
+                padding: 20px 15px;
+                padding: 5vw 2vw;
+                text-align: center;
+            }
+            table td:nth-child(2) {
+                padding-left: 0;
+            }
+            table tr {
+                background-color: #e0f7fa;
+            }
+            table tr[data-href]:hover td{
+                 cursor: pointer;
+                background-color: #c3e4e8;
+            }
+            table tr:nth-child(even) {
+                background-color: #b2ebf2;
+            }
+            .avatar-wrapper {
+                position: relative;
+                padding-left: 4em;
+                padding-left: 13vw;
+            }
+            .avatar {
+                width: 3.2em;
+                width: 10vw;
+                height: 3.2em;
+                height: 10vw;
+                border-radius: 50%;
+                position: absolute;
+                left: 0;
+                top: 50%;
+                margin-top: -1.6em;
+                margin-top: -5vw;
+                border: 2px solid #fff;
+                background-color: white;
+                box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.2);
+            }
+            .avatar-wrapper h3 {
+                margin-bottom: 5px;
+            }
+            .avatar-wrapper p {
+                color: #616161;
+            }
+            .active .avatar-wrapper p {
+                color: white;
+            }
+            .font-bold {
+                font-weight: 600;
+            }
+            h1 {
+                 padding: 4px 0 8px;
+            }
+            h2 {
+                font-size: 1.3em;
+                font-size: 4vw;
+            }
+            p {
+                font-size: 0.8em;
+            }
+            th {
+                padding: 10px 4px;
+                background: #47acc1;
+                text-align: center;
+                color: white;
+            }
+            .conditionsApply {
+                font-weight: 400;
+                background: #e0f7fa;
+                color: black;
+                margin: 0;
+                display: flex;
+                align-items: center;
+                padding: 12px;
+                font-size: 14px;
+            }
+            #chatRedirect {
+                background: #de2727;
+                outline: none;
+                border-radius: 4px;
+                color: white;
+                font-size: 14px;
+                min-width: 90px;
+                min-height: 50px;
+            }
+        </style>
+<style type="text/css" media="print">
+  form {display: none;}
+</style>
+</head>
+<body>
+<h1>Video Campaign</h1>
+<div id="data"/>
+</body>
+</html>
