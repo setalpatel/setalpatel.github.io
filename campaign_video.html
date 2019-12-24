@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script type="text/javascript">
   var spData = null;
   function doData(json) {
@@ -39,6 +39,21 @@
       return table;
   }
 
+  function clickHandler(url) {
+    const json = {
+        "type":"web_post",
+        "referrer":"webPost",
+        "postId":0,
+        "webUrl":url
+    };
+    console.log(json);
+    try {
+        Android.onAction(JSON.stringify(json));
+    } catch (err) {
+        return;
+    }
+  };
+
   function readData(parent) {
       var data = spData;
       var table = drawTable(parent);
@@ -59,7 +74,8 @@
       readData($("#data"));
 
       $("table").on("click", "tr[data-href]", function () {
-           window.location = $(this).attr("data-href");
+        var url = $(this).attr("data-href");
+        clickHandler(url);
       });
   });
   </script>
