@@ -9,28 +9,31 @@
   }
 
   function drawCell(tr, val) {
-     var td = $("<td/>");
-     tr.append(td);
-     td.append(val);
-     return td;
+    var td = $("<td/>");
+    tr.append(td);
+    td.append(val);
+    return td;
  }
 
   function drawRow(table, rowData) {
-      if (rowData == null) return null;
-      if (rowData.length == 0) return null;
+    if (rowData == null) return null;
+    if (rowData.length == 0) return null;
 
-      var tr = $("<tr/>");
-      table.append(tr);
+    var tr = $("<tr/>");
+    table.append(tr);
 
-      var lastCell = rowData.pop();
-      if (/^http(s):\/\//.test(lastCell)) {
-          tr.attr("data-href", lastCell);
-      }
-
-      for(var c=0; c<rowData.length; c++) {
-          drawCell(tr, rowData[c]);
-      }
-      return tr;
+    var lastCell = rowData.pop();
+    var previousCell = rowData.slice(-1)[0].replace(/ /g, '');
+    if (/^http(s):\/\//.test(previousCell) || previousCell === 'profileLink') {
+        rowData.pop();
+    }
+    if (/[0-9]/.test(lastCell)) {
+        tr.attr("data-href", lastCell);
+    }
+    for(var c=0; c<rowData.length; c++) {
+        drawCell(tr, rowData[c]);
+    }
+    return tr;
   }
 
   function drawTable(parent) {
@@ -39,10 +42,13 @@
       return table;
   }
 
-  function clickHandler(url) {
+  function clickHandler(userId) {
     const json = {
-        "type":"launch_custom_chrome_tabs",
-        "webUrl":url
+        "action":"open_activity",
+        "type":"profile",
+        "self":false,
+        "referrer":"webPost",
+        "userId": userId
     };
     console.log(json);
     try {
@@ -72,8 +78,8 @@
       readData($("#data"));
 
       $("table").on("click", "tr[data-href]", function () {
-        var url = $(this).attr("data-href");
-        clickHandler(url);
+        var userId = $(this).attr("data-href");
+        clickHandler(userId);
       });
   });
   </script>
@@ -248,6 +254,9 @@
                 font-size: 14px;
                 min-width: 90px;
                 min-height: 50px;
+            }
+            .data {
+                overflow: scroll;
             }
         </style>
 <style type="text/css" media="print">
