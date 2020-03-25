@@ -1,0 +1,1252 @@
+<!doctype html>
+<html>
+
+<head>
+    <!-- google fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat+Alternates&display=swap" rel="stylesheet" crossorigin="anonymous"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script>
+        //external library
+        /*! dom-to-image 10-06-2017 */
+        !(function (a) {
+            "use strict";
+
+            function b(a, b) {
+                function c(a) {
+                    return (
+                        b.bgcolor && (a.style.backgroundColor = b.bgcolor),
+                        b.width && (a.style.width = b.width + "px"),
+                        b.height && (a.style.height = b.height + "px"),
+                        b.style &&
+                        Object.keys(b.style).forEach(function (c) {
+                            a.style[c] = b.style[c];
+                        }),
+                        a
+                    );
+                }
+                return (
+                    (b = b || {}),
+                    g(b),
+                    Promise.resolve(a)
+                    .then(function (a) {
+                        return i(a, b.filter, !0);
+                    })
+                    .then(j)
+                    .then(k)
+                    .then(c)
+                    .then(function (c) {
+                        return l(c, b.width || q.width(a), b.height || q.height(a));
+                    })
+                );
+            }
+
+            function c(a, b) {
+                return h(a, b || {}).then(function (b) {
+                    return b
+                        .getContext("2d")
+                        .getImageData(0, 0, q.width(a), q.height(a)).data;
+                });
+            }
+
+            function d(a, b) {
+                return h(a, b || {}).then(function (a) {
+                    return a.toDataURL();
+                });
+            }
+
+            function e(a, b) {
+                return (
+                    (b = b || {}),
+                    h(a, b).then(function (a) {
+                        return a.toDataURL("image/jpeg", b.quality || 1);
+                    })
+                );
+            }
+
+            function f(a, b) {
+                return h(a, b || {}).then(q.canvasToBlob);
+            }
+
+            function g(a) {
+                "undefined" == typeof a.imagePlaceholder ?
+                    (v.impl.options.imagePlaceholder = u.imagePlaceholder) :
+                    (v.impl.options.imagePlaceholder = a.imagePlaceholder),
+                    "undefined" == typeof a.cacheBust ?
+                    (v.impl.options.cacheBust = u.cacheBust) :
+                    (v.impl.options.cacheBust = a.cacheBust);
+            }
+
+            function h(a, c) {
+                function d(a) {
+                    var b = document.createElement("canvas");
+                    if (
+                        ((b.width = c.width || q.width(a)),
+                            (b.height = c.height || q.height(a)),
+                            c.bgcolor)
+                    ) {
+                        var d = b.getContext("2d");
+                        (d.fillStyle = c.bgcolor), d.fillRect(0, 0, b.width, b.height);
+                    }
+                    return b;
+                }
+                return b(a, c)
+                    .then(q.makeImage)
+                    .then(q.delay(100))
+                    .then(function (b) {
+                        var c = d(a);
+                        return c.getContext("2d").drawImage(b, 0, 0), c;
+                    });
+            }
+
+            function i(a, b, c) {
+                function d(a) {
+                    return a instanceof HTMLCanvasElement ?
+                        q.makeImage(a.toDataURL()) :
+                        a.cloneNode(!1);
+                }
+
+                function e(a, b, c) {
+                    function d(a, b, c) {
+                        var d = Promise.resolve();
+                        return (
+                            b.forEach(function (b) {
+                                d = d
+                                    .then(function () {
+                                        return i(b, c);
+                                    })
+                                    .then(function (b) {
+                                        b && a.appendChild(b);
+                                    });
+                            }),
+                            d
+                        );
+                    }
+                    var e = a.childNodes;
+                    return 0 === e.length ?
+                        Promise.resolve(b) :
+                        d(b, q.asArray(e), c).then(function () {
+                            return b;
+                        });
+                }
+
+                function f(a, b) {
+                    function c() {
+                        function c(a, b) {
+                            function c(a, b) {
+                                q.asArray(a).forEach(function (c) {
+                                    b.setProperty(
+                                        c,
+                                        a.getPropertyValue(c),
+                                        a.getPropertyPriority(c)
+                                    );
+                                });
+                            }
+                            a.cssText ? (b.cssText = a.cssText) : c(a, b);
+                        }
+                        c(window.getComputedStyle(a), b.style);
+                    }
+
+                    function d() {
+                        function c(c) {
+                            function d(a, b, c) {
+                                function d(a) {
+                                    var b = a.getPropertyValue("content");
+                                    return a.cssText + " content: " + b + ";";
+                                }
+
+                                function e(a) {
+                                    function b(b) {
+                                        return (
+                                            b +
+                                            ": " +
+                                            a.getPropertyValue(b) +
+                                            (a.getPropertyPriority(b) ? " !important" : "")
+                                        );
+                                    }
+                                    return (
+                                        q
+                                        .asArray(a)
+                                        .map(b)
+                                        .join("; ") + ";"
+                                    );
+                                }
+                                var f = "." + a + ":" + b,
+                                    g = c.cssText ? d(c) : e(c);
+                                return document.createTextNode(f + "{" + g + "}");
+                            }
+                            var e = window.getComputedStyle(a, c),
+                                f = e.getPropertyValue("content");
+                            if ("" !== f && "none" !== f) {
+                                var g = q.uid();
+                                b.className = b.className + " " + g;
+                                var h = document.createElement("style");
+                                h.appendChild(d(g, c, e)), b.appendChild(h);
+                            }
+                        }
+                        [":before", ":after"].forEach(function (a) {
+                            c(a);
+                        });
+                    }
+
+                    function e() {
+                        a instanceof HTMLTextAreaElement && (b.innerHTML = a.value),
+                            a instanceof HTMLInputElement &&
+                            b.setAttribute("value", a.value);
+                    }
+
+                    function f() {
+                        b instanceof SVGElement &&
+                            (b.setAttribute("xmlns", "http://www.w3.org/2000/svg"),
+                                b instanceof SVGRectElement && ["width", "height"].forEach(function (a) {
+                                    var c = b.getAttribute(a);
+                                    c && b.style.setProperty(a, c);
+                                }));
+                    }
+                    return b instanceof Element ?
+                        Promise.resolve()
+                        .then(c)
+                        .then(d)
+                        .then(e)
+                        .then(f)
+                        .then(function () {
+                            return b;
+                        }) :
+                        b;
+                }
+                return c || !b || b(a) ?
+                    Promise.resolve(a)
+                    .then(d)
+                    .then(function (c) {
+                        return e(a, c, b);
+                    })
+                    .then(function (b) {
+                        return f(a, b);
+                    }) :
+                    Promise.resolve();
+            }
+
+            function j(a) {
+                return s.resolveAll().then(function (b) {
+                    var c = document.createElement("style");
+                    return (
+                        a.appendChild(c), c.appendChild(document.createTextNode(b)), a
+                    );
+                });
+            }
+
+            function k(a) {
+                return t.inlineAll(a).then(function () {
+                    return a;
+                });
+            }
+
+            function l(a, b, c) {
+                return Promise.resolve(a)
+                    .then(function (a) {
+                        return (
+                            a.setAttribute("xmlns", "http://www.w3.org/1999/xhtml"),
+                            new XMLSerializer().serializeToString(a)
+                        );
+                    })
+                    .then(q.escapeXhtml)
+                    .then(function (a) {
+                        return (
+                            '<foreignObject x="0" y="0" width="100%" height="100%">' +
+                            a +
+                            "</foreignObject>"
+                        );
+                    })
+                    .then(function (a) {
+                        return (
+                            '<svg xmlns="http://www.w3.org/2000/svg" width="' +
+                            b +
+                            '" height="' +
+                            c +
+                            '">' +
+                            a +
+                            "</svg>"
+                        );
+                    })
+                    .then(function (a) {
+                        return "data:image/svg+xml;charset=utf-8," + a;
+                    });
+            }
+
+            function m() {
+                function a() {
+                    var a = "application/font-woff",
+                        b = "image/jpeg";
+                    return {
+                        woff: a,
+                        woff2: a,
+                        ttf: "application/font-truetype",
+                        eot: "application/vnd.ms-fontobject",
+                        png: "image/png",
+                        jpg: b,
+                        jpeg: b,
+                        gif: "image/gif",
+                        tiff: "image/tiff",
+                        svg: "image/svg+xml"
+                    };
+                }
+
+                function b(a) {
+                    var b = /\.([^\.\/]*?)$/g.exec(a);
+                    return b ? b[1] : "";
+                }
+
+                function c(c) {
+                    var d = b(c).toLowerCase();
+                    return a()[d] || "";
+                }
+
+                function d(a) {
+                    return a.search(/^(data:)/) !== -1;
+                }
+
+                function e(a) {
+                    return new Promise(function (b) {
+                        for (
+                            var c = window.atob(a.toDataURL().split(",")[1]),
+                                d = c.length,
+                                e = new Uint8Array(d),
+                                f = 0; f < d; f++
+                        )
+                            e[f] = c.charCodeAt(f);
+                        b(new Blob([e], {
+                            type: "image/png"
+                        }));
+                    });
+                }
+
+                function f(a) {
+                    return a.toBlob ?
+                        new Promise(function (b) {
+                            a.toBlob(b);
+                        }) :
+                        e(a);
+                }
+
+                function g(a, b) {
+                    var c = document.implementation.createHTMLDocument(),
+                        d = c.createElement("base");
+                    c.head.appendChild(d);
+                    var e = c.createElement("a");
+                    return c.body.appendChild(e), (d.href = b), (e.href = a), e.href;
+                }
+
+                function h() {
+                    var a = 0;
+                    return function () {
+                        function b() {
+                            return (
+                                "0000" + ((Math.random() * Math.pow(36, 4)) << 0).toString(36)
+                            ).slice(-4);
+                        }
+                        return "u" + b() + a++;
+                    };
+                }
+
+                function i(a) {
+                    return new Promise(function (b, c) {
+                        var d = new Image();
+                        (d.onload = function () {
+                            b(d);
+                        }),
+                        (d.onerror = c),
+                        (d.src = a);
+                    });
+                }
+
+                function j(a) {
+                    var b = 3e4;
+                    return (
+                        v.impl.options.cacheBust &&
+                        (a += (/\?/.test(a) ? "&" : "?") + new Date().getTime()),
+                        new Promise(function (c) {
+                            function d() {
+                                if (4 === g.readyState) {
+                                    if (200 !== g.status)
+                                        return void(h ?
+                                            c(h) :
+                                            f(
+                                                "cannot fetch resource: " +
+                                                a +
+                                                ", status: " +
+                                                g.status
+                                            ));
+                                    var b = new FileReader();
+                                    (b.onloadend = function () {
+                                        var a = b.result.split(/,/)[1];
+                                        c(a);
+                                    }),
+                                    b.readAsDataURL(g.response);
+                                }
+                            }
+
+                            function e() {
+                                h
+                                    ?
+                                    c(h) :
+                                    f(
+                                        "timeout of " +
+                                        b +
+                                        "ms occured while fetching resource: " +
+                                        a
+                                    );
+                            }
+
+                            function f(a) {
+                                console.error(a), c("");
+                            }
+                            var g = new XMLHttpRequest();
+                            (g.onreadystatechange = d),
+                            (g.ontimeout = e),
+                            (g.responseType = "blob"),
+                            (g.timeout = b),
+                            g.open("GET", a, !0),
+                                g.send();
+                            var h;
+                            if (v.impl.options.imagePlaceholder) {
+                                var i = v.impl.options.imagePlaceholder.split(/,/);
+                                i && i[1] && (h = i[1]);
+                            }
+                        })
+                    );
+                }
+
+                function k(a, b) {
+                    return "data:" + b + ";base64," + a;
+                }
+
+                function l(a) {
+                    return a.replace(/([.*+?^${}()|\[\]\/\\])/g, "\\$1");
+                }
+
+                function m(a) {
+                    return function (b) {
+                        return new Promise(function (c) {
+                            setTimeout(function () {
+                                c(b);
+                            }, a);
+                        });
+                    };
+                }
+
+                function n(a) {
+                    for (var b = [], c = a.length, d = 0; d < c; d++) b.push(a[d]);
+                    return b;
+                }
+
+                function o(a) {
+                    return a.replace(/#/g, "%23").replace(/\n/g, "%0A");
+                }
+
+                function p(a) {
+                    var b = r(a, "border-left-width"),
+                        c = r(a, "border-right-width");
+                    return a.scrollWidth + b + c;
+                }
+
+                function q(a) {
+                    var b = r(a, "border-top-width"),
+                        c = r(a, "border-bottom-width");
+                    return a.scrollHeight + b + c;
+                }
+
+                function r(a, b) {
+                    var c = window.getComputedStyle(a).getPropertyValue(b);
+                    return parseFloat(c.replace("px", ""));
+                }
+                return {
+                    escape: l,
+                    parseExtension: b,
+                    mimeType: c,
+                    dataAsUrl: k,
+                    isDataUrl: d,
+                    canvasToBlob: f,
+                    resolveUrl: g,
+                    getAndEncode: j,
+                    uid: h(),
+                    delay: m,
+                    asArray: n,
+                    escapeXhtml: o,
+                    makeImage: i,
+                    width: p,
+                    height: q
+                };
+            }
+
+            function n() {
+                function a(a) {
+                    return a.search(e) !== -1;
+                }
+
+                function b(a) {
+                    for (var b, c = []; null !== (b = e.exec(a));) c.push(b[1]);
+                    return c.filter(function (a) {
+                        return !q.isDataUrl(a);
+                    });
+                }
+
+                function c(a, b, c, d) {
+                    function e(a) {
+                        return new RegExp(
+                            "(url\\(['\"]?)(" + q.escape(a) + ")(['\"]?\\))",
+                            "g"
+                        );
+                    }
+                    return Promise.resolve(b)
+                        .then(function (a) {
+                            return c ? q.resolveUrl(a, c) : a;
+                        })
+                        .then(d || q.getAndEncode)
+                        .then(function (a) {
+                            return q.dataAsUrl(a, q.mimeType(b));
+                        })
+                        .then(function (c) {
+                            return a.replace(e(b), "$1" + c + "$3");
+                        });
+                }
+
+                function d(d, e, f) {
+                    function g() {
+                        return !a(d);
+                    }
+                    return g() ?
+                        Promise.resolve(d) :
+                        Promise.resolve(d)
+                        .then(b)
+                        .then(function (a) {
+                            var b = Promise.resolve(d);
+                            return (
+                                a.forEach(function (a) {
+                                    b = b.then(function (b) {
+                                        return c(b, a, e, f);
+                                    });
+                                }),
+                                b
+                            );
+                        });
+                }
+                var e = /url\(['"]?([^'"]+?)['"]?\)/g;
+                return {
+                    inlineAll: d,
+                    shouldProcess: a,
+                    impl: {
+                        readUrls: b,
+                        inline: c
+                    }
+                };
+            }
+
+            function o() {
+                function a() {
+                    return b(document)
+                        .then(function (a) {
+                            return Promise.all(
+                                a.map(function (a) {
+                                    return a.resolve();
+                                })
+                            );
+                        })
+                        .then(function (a) {
+                            return a.join("\n");
+                        });
+                }
+
+                function b() {
+                    function a(a) {
+                        return a
+                            .filter(function (a) {
+                                return a.type === CSSRule.FONT_FACE_RULE;
+                            })
+                            .filter(function (a) {
+                                return r.shouldProcess(a.style.getPropertyValue("src"));
+                            });
+                    }
+
+                    function b(a) {
+                        var b = [];
+                        return (
+                            a.forEach(function (a) {
+                                try {
+                                    q.asArray(a.cssRules || []).forEach(b.push.bind(b));
+                                } catch (c) {
+                                    console.log(
+                                        "Error while reading CSS rules from " + a.href,
+                                        c.toString()
+                                    );
+                                }
+                            }),
+                            b
+                        );
+                    }
+
+                    function c(a) {
+                        return {
+                            resolve: function () {
+                                var b = (a.parentStyleSheet || {}).href;
+                                return r.inlineAll(a.cssText, b);
+                            },
+                            src: function () {
+                                return a.style.getPropertyValue("src");
+                            }
+                        };
+                    }
+                    return Promise.resolve(q.asArray(document.styleSheets))
+                        .then(b)
+                        .then(a)
+                        .then(function (a) {
+                            return a.map(c);
+                        });
+                }
+                return {
+                    resolveAll: a,
+                    impl: {
+                        readAll: b
+                    }
+                };
+            }
+
+            function p() {
+                function a(a) {
+                    function b(b) {
+                        return q.isDataUrl(a.src) ?
+                            Promise.resolve() :
+                            Promise.resolve(a.src)
+                            .then(b || q.getAndEncode)
+                            .then(function (b) {
+                                return q.dataAsUrl(b, q.mimeType(a.src));
+                            })
+                            .then(function (b) {
+                                return new Promise(function (c, d) {
+                                    (a.onload = c), (a.onerror = d), (a.src = b);
+                                });
+                            });
+                    }
+                    return {
+                        inline: b
+                    };
+                }
+
+                function b(c) {
+                    function d(a) {
+                        var b = a.style.getPropertyValue("background");
+                        return b ?
+                            r
+                            .inlineAll(b)
+                            .then(function (b) {
+                                a.style.setProperty(
+                                    "background",
+                                    b,
+                                    a.style.getPropertyPriority("background")
+                                );
+                            })
+                            .then(function () {
+                                return a;
+                            }) :
+                            Promise.resolve(a);
+                    }
+                    return c instanceof Element ?
+                        d(c).then(function () {
+                            return c instanceof HTMLImageElement ?
+                                a(c).inline() :
+                                Promise.all(
+                                    q.asArray(c.childNodes).map(function (a) {
+                                        return b(a);
+                                    })
+                                );
+                        }) :
+                        Promise.resolve(c);
+                }
+                return {
+                    inlineAll: b,
+                    impl: {
+                        newImage: a
+                    }
+                };
+            }
+            var q = m(),
+                r = n(),
+                s = o(),
+                t = p(),
+                u = {
+                    imagePlaceholder: void 0,
+                    cacheBust: !1
+                },
+                v = {
+                    toSvg: b,
+                    toPng: d,
+                    toJpeg: e,
+                    toBlob: f,
+                    toPixelData: c,
+                    impl: {
+                        fontFaces: s,
+                        images: t,
+                        util: q,
+                        inliner: r,
+                        options: {}
+                    }
+                };
+            "undefined" != typeof module
+                ?
+                (module.exports = v) :
+                (a.domtoimage = v);
+        })(this);
+    </script>
+
+		<script type="text/javascript">
+			const CleverTap = {
+				initialize(accountId) {
+						window.clevertap = {
+								event: [],
+								profile: [],
+								account: [],
+								onUserLogin: [],
+								notifications: []
+						};
+						window.clevertap.account.push({
+								id: accountId
+						});
+
+						(function () {
+								let wzrk = document.createElement("script");
+								wzrk.type = "text/javascript";
+								wzrk.async = true;
+								wzrk.src =
+										("https:" == document.location.protocol ?
+												"https://d2r1yp2w7bby2u.cloudfront.net" :
+												"http://static.clevertap.com") + "/js/a.js";
+								let s = document.getElementsByTagName("script")[0];
+								s.parentNode.insertBefore(wzrk, s);
+						})();
+				},
+
+				sendEvent(name, payload) {
+						name = name;
+						payload = payload || {};
+						payload = {
+								...payload,
+						};
+
+						if (true) {
+								if (window.clevertap) {
+										window.clevertap.event.push(name, payload);
+								}
+						} else {
+								console.log(
+										"TRACKING EVENT NAME: ",
+										name,
+										"TRACKING EVENT PAYLOAD: ",
+										payload
+								);
+						}
+				},
+
+				logout() {
+						if (window.clevertap && window.clevertap.logout) {
+								window.clevertap.logout();
+						}
+				}
+			};
+
+			//cleverTap initialise
+			CleverTap.initialize("WR9-KZ9-875Z")
+			var spData = null;
+			var title = ''
+
+			// Shorthand for $( document ).ready()
+			$(document).ready(function () {
+					
+				//share logic
+				document.getElementById("share").addEventListener('click', share)
+
+				function sendEventToTrack() {
+					const urlParams = new URLSearchParams(window.location.search)
+					const page = urlParams.get('page')
+					let language
+					switch (page) {
+						case '11':
+							language = "Tamil"
+							break;
+						case '12':
+							language = "Hindi"
+							break;
+						case '13':
+							language = "Assamese"
+							break;
+						case '14':
+							language = "Haryanvi"
+							break;
+						case '15':
+							language = "Assamese (All states data)"
+							break;
+						case '16':
+							language = "Bengali"
+							break;
+						case '17':
+							language = "Rajasthani"
+							break;
+						case '18':
+							language = "Malayalam"
+							break;
+						case '19':
+							language = "Odia"
+							break;
+						case '20':
+							language = "Kannada"
+							break;
+						case '21':
+							language = "Marathi"
+							break;
+						case '22':
+							language = "Telugu"
+							break;
+						default:
+							break;
+					}
+					CleverTap.sendEvent("CovidUpdateShared", {
+							token: 'lol',//window.Android.get("userInfo").replace(/(\r\n|\n|\r)/gm, ""),
+							language
+					})
+				}
+
+				function formatDate() {
+					const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+					var d = new Date(),
+							month = '' + (d.getMonth() + 1),
+							day = '' + d.getDate(),
+							year = d.getFullYear(),
+							hour = d.getHours(),
+							minute = d.getMinutes(),
+							week = '' + DAYS[d.getDay()];
+
+					month = (month < 10 ? "0" : "") + month;
+					day = (day < 10 ? "0" : "") + day;
+					hour = (hour < 10 ? "0" : "") + hour;
+					minute = (minute < 10 ? "0" : "") + minute;
+
+					return week + ", " +[day, month, year].join('-') + ", " + [hour, minute].join(":") +" hrs" ;
+				}
+				function share() {
+						document.getElementById("share").style.display = "none";
+						document.getElementById("dateAndTime").innerHTML = formatDate()
+						document.getElementById("dateAndTime").style.display = "block"
+						domtoimage.toBlob(document.body).then(function (blob) {
+							const formData = new FormData();
+							formData.append("userfile", blob);
+							document.getElementById("actionBtns").style.display = "flex";
+							document.getElementById("dateAndTime").style.display = "none"
+
+							fetch("https://mediaupload.sharechat.com/uploadFile", {
+								method: "POST",
+								body: formData,
+								mode: "cors"
+							})
+							.then(res => {
+								if (!res.ok) {
+										throw new Error(res.statusText);
+								}
+								return res.json();
+							})
+							.then(data => {
+								if ("fileUrl" in data) {
+										createImagePost(data);
+								}
+							})
+							.catch(err => {
+								console.log(err);
+							});
+						});
+					}
+
+				function createImagePost(imageData) {
+					let encryptedUserInfo = window.Android.get("userInfo");
+					// let encryptedUserInfo =
+					//     "PnZsF1v6xZx91gFaCvqmB33dC1XSNYBRFz9JvEWRhFM88EhZKEvA5/YvsTywK0tQMrsaP402HqL3qQmfC235X2QxozFfmhWTbyQW1eincL2C9Bxry/yg1E/8j3E5st5Qt6N6QA8PU29v8AbxmUV+zaK28il0hZ8H6KZWtCoVVWY6dG2LtxH/C8uNOdyWueF112djOFh6Cgi46SxYTGExq5od+3qpUr8G3DXTW9DfRRB1vb3mAOTDpcbIyK1NycNXXehOaflxWWZEHzUSPQvTCuDcgAHipPAFxFIs9n8yhX38cet3wa8qwwrZzr6ifBzWoKyBjOD0NDzTx2pYo8+2/g=="
+
+					let payload = {
+						festivalName: "ValentineWeek",
+						imageUrl: imageData.fileUrl,
+						language: "all language"
+					}
+					fetch("https://apis.sharechat.com/festive-webcard-service/generateImagePost", {
+						method: "POST",
+						body: JSON.stringify(payload),
+						headers: {
+								"Authorization": encryptedUserInfo.replace(/(\r\n|\n|\r)/gm, ""),
+								"Content-Type": "application/json"
+						}
+					})
+					.then(res => {
+						if (!res.ok) {
+							throw new Error(res.statusText);
+						}
+						return res.json();
+					})
+					.then(data => {
+						// console.log(data.PostDetails.postId, "postid")
+						let payload = {
+							type: "shareWebCard",
+							postId: data.PostDetails.postId
+						};
+						//send cleverTap event
+						sendEventToTrack();
+						window.Android.onAction(JSON.stringify(payload));
+					})
+					.catch(err => {
+						console.log(err)
+					});
+				}
+			})
+			getDataScript();
+
+			function getDataScript() {
+
+					const urlParams = new URLSearchParams(window.location.search)
+					const page = urlParams.get('page')
+					const path = urlParams.get('path') //1YYWOJMfhxFmy8-J_g8ADBISnNNaY7WzTkCiikr28YA0
+					$.getScript(
+							`https://spreadsheets.google.com/feeds/cells/${path}/${page}/public/full?alt=json&callback=doData`,
+							function () {
+									readData($("#data"));
+									setHeading();
+							});
+			}
+
+			function doData(json) {
+					spData = json.feed.entry;
+					title = json.feed.title;
+			}
+
+			function setHeading() {
+					const heading = document.getElementById('heading');
+					heading.innerHTML = Object.values(title).filter(val => val !== 'text')[0];
+			}
+
+			function drawCell(tr, val) {
+					var td = $("<td/>");
+					tr.append(td);
+					td.append(val);
+
+					return td;
+			}
+
+			function drawRow(table, rowData) {
+					if (rowData == null) return null;
+					if (rowData.length == 0) return null;
+
+					var tr = $("<tr/>");
+					table.append(tr);
+					for (var c = 0; c < rowData.length; c++) {
+							drawCell(tr, rowData[c]);
+					}
+					return tr;
+			}
+
+			function drawTable(parent) {
+					var table = $("<table/>");
+					parent.append(table);
+					return table;
+			}
+
+			function clickHandler(userId) {
+					const json = {
+							"action": "open_activity",
+							"type": "profile",
+							"self": false,
+							"referrer": "webPost",
+							"userId": userId
+					};
+					console.log(json);
+					try {
+							Android.onAction(JSON.stringify(json));
+					} catch (err) {
+							return;
+					}
+			};
+
+			function readData(parent) {
+				var data = spData;
+				var table = drawTable(parent);
+				var rowData = [];
+
+				for (var r = 0; r < data.length; r++) {
+						var cell = data[r]["gs$cell"];
+						var val = cell["$t"];
+						if (cell.col == 1) {
+
+								drawRow(table, rowData);
+								rowData = [];
+						}
+						rowData.push(val);
+				}
+				drawRow(table, rowData);
+			}
+    </script>
+    <style>
+        *,
+        :after,
+        :before {
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        body,
+        html {
+            height: 100%;
+            width: 100%;
+        }
+
+        body {
+            margin: 0;
+            padding: 4px;
+            position: relative;
+            -moz-osx-font-smoothing: grayscale;
+            -webkit-font-smoothing: antialiased;
+            font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+                Oxygen-Sans, Ubuntu, Cantarell, Helvetica Neue, sans-serif;
+            color: #212121;
+            background-color: #f1f1f1;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        b {
+            font-weight: 500;
+            text-align: center;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        p {
+            margin: 0;
+        }
+
+        .bg-graphics {
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-ellipsis {
+            max-width: 30vw;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        section {
+            border-radius: 15px 15px 4px 4px;
+            box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+        }
+
+        header,
+        footer {
+            background-color: #00acc1;
+        }
+
+        table tr.active {
+            background-color: #0097a7 !important;
+        }
+
+        header,
+        footer,
+        table tr.active {
+            color: white;
+        }
+
+        header {
+            padding: 12px 16px;
+            font-size: 1em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        footer {
+            height: 36px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table tr:first-child {
+            font-weight: 600;
+        }
+
+        table td {
+            padding: 20px 15px;
+            padding: 5vw 2vw;
+            text-align: center;
+        }
+
+        table td:nth-child(2) {
+            padding-left: 0;
+        }
+
+        table tr {
+            background-color: #e0f7fa;
+        }
+
+        table tr[data-href]:hover td {
+            cursor: pointer;
+            background-color: #c3e4e8;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #b2ebf2;
+        }
+
+        .avatar-wrapper {
+            position: relative;
+            padding-left: 4em;
+            padding-left: 13vw;
+        }
+
+        .avatar {
+            width: 3.2em;
+            width: 10vw;
+            height: 3.2em;
+            height: 10vw;
+            border-radius: 50%;
+            position: absolute;
+            left: 0;
+            top: 50%;
+            margin-top: -1.6em;
+            margin-top: -5vw;
+            border: 2px solid #fff;
+            background-color: white;
+            box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.2);
+        }
+
+        .avatar-wrapper h3 {
+            margin-bottom: 5px;
+        }
+
+        .avatar-wrapper p {
+            color: #616161;
+        }
+
+        .active .avatar-wrapper p {
+            color: white;
+        }
+
+        .font-bold {
+            font-weight: 600;
+        }
+
+        h1 {
+            padding: 4px 0 8px;
+        }
+
+        h2 {
+            font-size: 1.3em;
+            font-size: 4vw;
+        }
+
+        p {
+            font-size: 0.8em;
+        }
+
+        th {
+            padding: 10px 4px;
+            background: #47acc1;
+            text-align: center;
+            color: white;
+        }
+
+        .conditionsApply {
+            font-weight: 400;
+            background: #e0f7fa;
+            color: black;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            font-size: 14px;
+        }
+
+        #chatRedirect {
+            background: #de2727;
+            outline: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 14px;
+            min-width: 90px;
+            min-height: 50px;
+        }
+
+        #data {
+            overflow: scroll;
+            position: relative;
+        }
+
+        #actionBtns {
+            padding: 20px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #share {
+            display: flex;
+            padding: 8px 24px;
+            width: 136px;
+            height: 40px;
+            background: #1ca271;
+            border-radius: 20px;
+            justify-content: space-between;
+        }
+
+        .shareText {
+            font-family: "Montserrat Alternates", sans-serif;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 20px;
+            line-height: 24px;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        :focus {
+            outline: none;
+        }
+
+        #dateAndTime {
+            font-size: 14px
+        }
+    </style>
+    <style type="text/css" media="print">
+        form {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 id='heading'></h1>
+    <div id="data"> </div>
+    <div id="actionBtns">
+        <div id='dateAndTime'></div>
+        <button id="share">
+            <span><img src="./resource/whatsapp-color.svg"  /></span>
+            <span class="shareText">Share</span>
+        </button>
+    </div>
+</body>
+
+</html>
