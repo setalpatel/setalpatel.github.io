@@ -759,77 +759,77 @@
 			// Shorthand for $( document ).ready()
 			$(document).ready(function () {
 					
-					//share logic
-					document.getElementById("share").addEventListener('click', share)
+				//share logic
+				document.getElementById("share").addEventListener('click', share)
 
-					function sendEventToTrack() {
-						const urlParams = new URLSearchParams(window.location.search)
-						const page = urlParams.get('page')
-						let language
-						switch (page) {
-							case '11':
-								language = "Tamil"
-								break;
-							case '12':
-								language = "Hindi"
-								break;
-							case '13':
-								language = "Assamese"
-								break;
-							case '14':
-								language = "Haryanvi"
-								break;
-							case '15':
-								language = "Assamese (All states data)"
-								break;
-							case '16':
-								language = "Bengali"
-								break;
-							case '17':
-								language = "Rajasthani"
-								break;
-							case '18':
-								language = "Malayalam"
-								break;
-							case '19':
-								language = "Odia"
-								break;
-							case '20':
-								language = "Kannada"
-								break;
-							case '21':
-								language = "Marathi"
-								break;
-							case '22':
-								language = "Telugu"
-								break;
-							default:
-								break;
-						}
-						CleverTap.sendEvent("CovidUpdateShared", {
-								token: 'lol',//window.Android.get("userInfo").replace(/(\r\n|\n|\r)/gm, ""),
-								language
-						})
+				function sendEventToTrack() {
+					const urlParams = new URLSearchParams(window.location.search)
+					const page = urlParams.get('page')
+					let language
+					switch (page) {
+						case '11':
+							language = "Tamil"
+							break;
+						case '12':
+							language = "Hindi"
+							break;
+						case '13':
+							language = "Assamese"
+							break;
+						case '14':
+							language = "Haryanvi"
+							break;
+						case '15':
+							language = "Assamese (All states data)"
+							break;
+						case '16':
+							language = "Bengali"
+							break;
+						case '17':
+							language = "Rajasthani"
+							break;
+						case '18':
+							language = "Malayalam"
+							break;
+						case '19':
+							language = "Odia"
+							break;
+						case '20':
+							language = "Kannada"
+							break;
+						case '21':
+							language = "Marathi"
+							break;
+						case '22':
+							language = "Telugu"
+							break;
+						default:
+							break;
 					}
+					CleverTap.sendEvent("CovidUpdateShared", {
+							token: 'lol',//window.Android.get("userInfo").replace(/(\r\n|\n|\r)/gm, ""),
+							language
+					})
+				}
 
-					function formatDate() {
-						const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-						var d = new Date(),
-								month = '' + (d.getMonth() + 1),
-								day = '' + d.getDate(),
-								year = d.getFullYear(),
-								hour = d.getHours(),
-								minute = d.getMinutes(),
-								week = '' + DAYS[d.getDay()];
+				function formatDate() {
+					const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+					var d = new Date(),
+							month = '' + (d.getMonth() + 1),
+							day = '' + d.getDate(),
+							year = d.getFullYear(),
+							hour = d.getHours(),
+							minute = d.getMinutes(),
+							week = '' + DAYS[d.getDay()];
 
-						month = (month < 10 ? "0" : "") + month;
-						day = (day < 10 ? "0" : "") + day;
-						hour = (hour < 10 ? "0" : "") + hour;
-						minute = (minute < 10 ? "0" : "") + minute;
+					month = (month < 10 ? "0" : "") + month;
+					day = (day < 10 ? "0" : "") + day;
+					hour = (hour < 10 ? "0" : "") + hour;
+					minute = (minute < 10 ? "0" : "") + minute;
 
-						return week + ", " +[day, month, year].join('-') + ", " + [hour, minute].join(":") +" hrs" ;
-					}
-					function share() {
+					return week + ", " +[day, month, year].join('-') + ", " + [hour, minute].join(":") +" hrs" ;
+				}
+				function share() {
 						document.getElementById("share").style.display = "none";
 						document.getElementById("dateAndTime").innerHTML = formatDate()
 						document.getElementById("dateAndTime").style.display = "block"
@@ -840,65 +840,65 @@
 							document.getElementById("dateAndTime").style.display = "none"
 
 							fetch("https://mediaupload.sharechat.com/uploadFile", {
-											method: "POST",
-											body: formData,
-											mode: "cors"
-									})
-									.then(res => {
-											if (!res.ok) {
-													throw new Error(res.statusText);
-											}
-											return res.json();
-									})
-									.then(data => {
-											if ("fileUrl" in data) {
-													createImagePost(data);
-											}
-									})
-									.catch(err => {
-											console.log(err);
-									});
+								method: "POST",
+								body: formData,
+								mode: "cors"
+							})
+							.then(res => {
+								if (!res.ok) {
+										throw new Error(res.statusText);
+								}
+								return res.json();
+							})
+							.then(data => {
+								if ("fileUrl" in data) {
+										createImagePost(data);
+								}
+							})
+							.catch(err => {
+								console.log(err);
+							});
 						});
 					}
 
-					function createImagePost(imageData) {
-							let encryptedUserInfo = window.Android.get("userInfo");
-							// let encryptedUserInfo =
-							//     "PnZsF1v6xZx91gFaCvqmB33dC1XSNYBRFz9JvEWRhFM88EhZKEvA5/YvsTywK0tQMrsaP402HqL3qQmfC235X2QxozFfmhWTbyQW1eincL2C9Bxry/yg1E/8j3E5st5Qt6N6QA8PU29v8AbxmUV+zaK28il0hZ8H6KZWtCoVVWY6dG2LtxH/C8uNOdyWueF112djOFh6Cgi46SxYTGExq5od+3qpUr8G3DXTW9DfRRB1vb3mAOTDpcbIyK1NycNXXehOaflxWWZEHzUSPQvTCuDcgAHipPAFxFIs9n8yhX38cet3wa8qwwrZzr6ifBzWoKyBjOD0NDzTx2pYo8+2/g=="
+				function createImagePost(imageData) {
+					let encryptedUserInfo = window.Android.get("userInfo");
+					// let encryptedUserInfo =
+					//     "PnZsF1v6xZx91gFaCvqmB33dC1XSNYBRFz9JvEWRhFM88EhZKEvA5/YvsTywK0tQMrsaP402HqL3qQmfC235X2QxozFfmhWTbyQW1eincL2C9Bxry/yg1E/8j3E5st5Qt6N6QA8PU29v8AbxmUV+zaK28il0hZ8H6KZWtCoVVWY6dG2LtxH/C8uNOdyWueF112djOFh6Cgi46SxYTGExq5od+3qpUr8G3DXTW9DfRRB1vb3mAOTDpcbIyK1NycNXXehOaflxWWZEHzUSPQvTCuDcgAHipPAFxFIs9n8yhX38cet3wa8qwwrZzr6ifBzWoKyBjOD0NDzTx2pYo8+2/g=="
 
-							let payload = {
-									festivalName: "ValentineWeek",
-									imageUrl: imageData.fileUrl,
-									language: "all language"
-							}
-							fetch("https://apis.sharechat.com/festive-webcard-service/generateImagePost", {
-											method: "POST",
-											body: JSON.stringify(payload),
-											headers: {
-													"Authorization": encryptedUserInfo.replace(/(\r\n|\n|\r)/gm, ""),
-													"Content-Type": "application/json"
-											}
-									})
-									.then(res => {
-											if (!res.ok) {
-													throw new Error(res.statusText);
-											}
-											return res.json();
-									})
-									.then(data => {
-											// console.log(data.PostDetails.postId, "postid")
-											let payload = {
-													type: "shareWebCard",
-													postId: data.PostDetails.postId
-											};
-											//send cleverTap event
-											sendEventToTrack();
-											window.Android.onAction(JSON.stringify(payload));
-									})
-									.catch(err => {
-											console.log(err)
-									});
+					let payload = {
+						festivalName: "ValentineWeek",
+						imageUrl: imageData.fileUrl,
+						language: "all language"
 					}
+					fetch("https://apis.sharechat.com/festive-webcard-service/generateImagePost", {
+						method: "POST",
+						body: JSON.stringify(payload),
+						headers: {
+								"Authorization": encryptedUserInfo.replace(/(\r\n|\n|\r)/gm, ""),
+								"Content-Type": "application/json"
+						}
+					})
+					.then(res => {
+						if (!res.ok) {
+							throw new Error(res.statusText);
+						}
+						return res.json();
+					})
+					.then(data => {
+						// console.log(data.PostDetails.postId, "postid")
+						let payload = {
+							type: "shareWebCard",
+							postId: data.PostDetails.postId
+						};
+						//send cleverTap event
+						sendEventToTrack();
+						window.Android.onAction(JSON.stringify(payload));
+					})
+					.catch(err => {
+						console.log(err)
+					});
+				}
 			})
 			getDataScript();
 
